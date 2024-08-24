@@ -2,7 +2,7 @@ package handler
 
 import "fmt"
 
-type CreateOpeningRequest struct {
+type OpeningRequest struct {
 	Role     string `json:"role"`
 	Company  string `json:"company"`
 	Location string `json:"location"`
@@ -10,6 +10,9 @@ type CreateOpeningRequest struct {
 	Link     string `json:"link"`
 	Salary   int64  `json:"salary"`
 }
+
+type CreateOpeningRequest OpeningRequest
+type UpdateOpeningRequest OpeningRequest
 
 func errParamIsRequired(name, typ string) error {
 	return fmt.Errorf("param: %s (type: %s) is required", name, typ)
@@ -39,4 +42,12 @@ func (r *CreateOpeningRequest) Validate() error {
 	}
 
 	return nil
+}
+
+func (r *UpdateOpeningRequest) Validate() error {
+	if r.Role != "" || r.Company != "" || r.Location != "" || r.Link != "" || r.Remote != nil || r.Salary > 0 {
+		return nil
+	}
+
+	return fmt.Errorf("at least one valid field must be provided")
 }
